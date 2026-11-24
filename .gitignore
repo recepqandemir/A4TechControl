@@ -1,0 +1,19 @@
+# Derleme çıktıları
+bin/
+obj/
+SetupOutput/
+*.pdb
+*.dll
+*.exe
+
+# Geçici / yerel ayarlar
+*.log
+*.user
+*.suo
+.vs/
+.vscode/
+Thumbs.db
+Desktop.ini
+
+# Kurulum sırasında oluşanlar
+Installer/*.exe

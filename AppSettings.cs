@@ -14,6 +14,7 @@ public sealed class AppSettings
 
     public static AppSettings Current { get; private set; } = Load();
 
+    public string Language { get; set; } = "TR";
     public bool AutoLaunchOnBoot { get; set; } = true;
     public bool SwapSideButtons { get; set; }
     public bool EnableFourWayWheel { get; set; } = true;

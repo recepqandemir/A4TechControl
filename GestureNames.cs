@@ -41,22 +41,8 @@ public static class GestureNames
 
     public static string Base(string key) => IsLong(key) ? key[..^LongSuffix.Length] : key;
 
-    public static string Display(string key)
-    {
-        var text = Base(key) switch
-        {
-            Right => "Sağ →",
-            UpRight => "Sağ-Yuk. ↗",
-            Up => "Yukarı ↑",
-            UpLeft => "Sol-Yuk. ↖",
-            Left => "Sol ←",
-            DownLeft => "Sol-Aş. ↙",
-            Down => "Aşağı ↓",
-            DownRight => "Sağ-Aş. ↘",
-            _ => Base(key)
-        };
-        return text + (IsLong(key) ? " (u)" : " (k)");
-    }
+    public static string Display(string key) =>
+        Lang.T("gesture." + Base(key)) + Lang.T(IsLong(key) ? "gesture.long" : "gesture.short");
 
     public static Dictionary<string, string> Defaults()
     {

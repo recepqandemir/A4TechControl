@@ -32,6 +32,7 @@ hafif ve yalnızca kullanıcı modunda çalışan alternatif.
 - Windows ile birlikte başlatma
 - Özel turuncu **"A4"** tepsi ikonu + açılış balon bildirimi (eski genel mavi "i" ikonu yerine)
 - Koyu temalı, yuvarlatılmış kartlar ve turuncu vurgularla modern arayüz; standart Windows başlık çubuğu yerine özel başlık (sürüklenebilir, simge durumuna küçültme/kapatma)
+- **TR / EN** dil değiştirici (ayarlar penceresinin sağ üstünde); seçim `%AppData%\A4TechControl\settings.json` içinde saklanır, tüm arayüz ve tepsi menüsü anında değişir
 - Sistem tepsisinden hızlı ayarlar
 - Ayarlar `%AppData%\A4TechControl\settings.json` içinde saklanır
 - Hatalar `%AppData%\A4TechControl\error.log` içine yazılır

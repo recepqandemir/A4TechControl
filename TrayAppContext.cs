@@ -24,15 +24,15 @@ public sealed class TrayAppContext : ApplicationContext
 
     public TrayAppContext()
     {
-        _settingsItem = new ToolStripMenuItem("Ayarlar...");
-        _swapItem = new ToolStripMenuItem("4. ve 5. tuş takası");
-        _gestureItem = new ToolStripMenuItem("Jestler");
-        _overlayItem = new ToolStripMenuItem("Jest okunu göster");
-        _fnItem = new ToolStripMenuItem("Fn tuş eşlemeleri");
-        _wheelItem = new ToolStripMenuItem("4 yönlü tekerlek");
-        _autoStartItem = new ToolStripMenuItem("Açılışta başlat");
-        _versionItem = new ToolStripMenuItem($"Sürüm {AppVersion.Display}") { Enabled = false };
-        _exitItem = new ToolStripMenuItem("Çıkış");
+        _settingsItem = new ToolStripMenuItem(Lang.T("menu.settings")) { Tag = "menu.settings" };
+        _swapItem = new ToolStripMenuItem(Lang.T("menu.swap")) { Tag = "menu.swap" };
+        _gestureItem = new ToolStripMenuItem(Lang.T("menu.gestures")) { Tag = "menu.gestures" };
+        _overlayItem = new ToolStripMenuItem(Lang.T("menu.gestureArrow")) { Tag = "menu.gestureArrow" };
+        _fnItem = new ToolStripMenuItem(Lang.T("menu.fn")) { Tag = "menu.fn" };
+        _wheelItem = new ToolStripMenuItem(Lang.T("menu.wheel")) { Tag = "menu.wheel" };
+        _autoStartItem = new ToolStripMenuItem(Lang.T("menu.autostart")) { Tag = "menu.autostart" };
+        _versionItem = new ToolStripMenuItem(Lang.F("menu.version", AppVersion.Display)) { Enabled = false };
+        _exitItem = new ToolStripMenuItem(Lang.T("menu.exit")) { Tag = "menu.exit" };
 
         _settingsItem.Click += (_, _) => OpenSettings();
         _swapItem.Click += (_, _) => Toggle(s => s.SwapSideButtons = !s.SwapSideButtons);
@@ -71,7 +71,7 @@ public sealed class TrayAppContext : ApplicationContext
         _tray = new NotifyIcon
         {
             Icon = TrayIconFactory.Create(),
-            Text = "A4Tech Control (FG35 / FGK10) — Ayarlar için çift tıkla",
+            Text = Lang.T("tray.text"),
             Visible = false,
             ContextMenuStrip = _menu
         };
@@ -85,6 +85,7 @@ public sealed class TrayAppContext : ApplicationContext
         // görünmeyen ikon sorununu önler. İlk açılışta balon ile haber ver.
         Application.Idle += OnFirstIdle;
         _idleHooked = true;
+        Lang.Changed += ApplyLanguage;
     }
 
     private void OnFirstIdle(object? sender, EventArgs e)
@@ -95,9 +96,20 @@ public sealed class TrayAppContext : ApplicationContext
 
         _tray.Visible = true;
         _tray.ShowBalloonTip(4000,
-            "A4Tech Control",
-            "FG35 / FGK10 hazır. Ayarlar için tepsi ikonuna çift tıkla.",
+            Lang.T("balloon.title"),
+            Lang.T("balloon.text"),
             ToolTipIcon.Info);
+    }
+
+    private void ApplyLanguage()
+    {
+        foreach (ToolStripItem item in _menu.Items)
+        {
+            if (item.Tag is string tag && tag.Length > 0)
+                item.Text = Lang.T(tag);
+        }
+        _versionItem.Text = Lang.F("menu.version", AppVersion.Display);
+        _tray.Text = Lang.T("tray.text");
     }
 
     private static void Toggle(Action<AppSettings> change)
@@ -133,6 +145,7 @@ public sealed class TrayAppContext : ApplicationContext
             _idleHooked = false;
             Application.Idle -= OnFirstIdle;
         }
+        Lang.Changed -= ApplyLanguage;
         _tray.Visible = false;
         _tray.Dispose();
         _menu.Dispose();

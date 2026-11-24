@@ -43,9 +43,10 @@ public sealed class SettingsForm : Form
         return combo;
     }
 
-    private static Label NewLabel(string text, int x, int y, int w = 150, bool muted = false) => new()
+    private static Label NewLabel(string key, int x, int y, int w = 150, bool muted = false) => new()
     {
-        Text = text,
+        Text = Lang.T(key),
+        Tag = key,
         Location = new Point(x, y),
         Size = new Size(w, 20),
         ForeColor = muted ? Theme.Muted : Theme.Text,
@@ -55,13 +56,16 @@ public sealed class SettingsForm : Form
     private readonly ComboBox _button3 = NewCombo();
     private readonly ComboBox _button4 = NewCombo();
     private readonly ComboBox _button5 = NewCombo();
-    private readonly ModernCheckBox _swap = new() { Text = "4. ve 5. tuşları takas et", Size = new Size(380, 20) };
-    private readonly ModernCheckBox _gesturesEnabled = new() { Text = "Jestleri etkinleştir (sağ tuş basılı tut + hareket)", Size = new Size(470, 20) };
-    private readonly ModernCheckBox _overlayEnabled = new() { Text = "Jest sırasında ekranda ok göster", Size = new Size(400, 20) };
-    private readonly ModernCheckBox _fnEnabled = new() { Text = "Fn tuş eşlemelerini etkinleştir", Size = new Size(400, 20) };
-    private readonly ModernCheckBox _wheelEnabled = new() { Text = "4 yönlü tekerleği etkinleştir", Size = new Size(400, 20) };
-    private readonly ModernCheckBox _autoStart = new() { Text = "Windows ile birlikte başlat", Size = new Size(400, 20) };
+    private readonly ModernCheckBox _swap = new() { Text = "4. ve 5. tuşları takas et", Tag = "chk.swap", Size = new Size(380, 20) };
+    private readonly ModernCheckBox _gesturesEnabled = new() { Text = "Jestleri etkinleştir (sağ tuş basılı tut + hareket)", Tag = "chk.gestures", Size = new Size(470, 20) };
+    private readonly ModernCheckBox _overlayEnabled = new() { Text = "Jest sırasında ekranda ok göster", Tag = "chk.overlay", Size = new Size(400, 20) };
+    private readonly ModernCheckBox _fnEnabled = new() { Text = "Fn tuş eşlemelerini etkinleştir", Tag = "chk.fn", Size = new Size(400, 20) };
+    private readonly ModernCheckBox _wheelEnabled = new() { Text = "4 yönlü tekerleği etkinleştir", Tag = "chk.wheel", Size = new Size(400, 20) };
+    private readonly ModernCheckBox _autoStart = new() { Text = "Windows ile birlikte başlat", Tag = "chk.autostart", Size = new Size(400, 20) };
     private readonly Label _status = new() { Text = "", ForeColor = Theme.Muted, Font = new Font("Segoe UI", 9F) };
+    private readonly Label _versionLabel = new() { ForeColor = Theme.Muted, Font = new Font("Segoe UI", 9F) };
+    private readonly ModernButton _trButton = new() { Text = "TR", Size = new Size(34, 28), Font = new Font("Segoe UI", 9F, FontStyle.Bold) };
+    private readonly ModernButton _enButton = new() { Text = "EN", Size = new Size(34, 28), Font = new Font("Segoe UI", 9F, FontStyle.Bold) };
     private readonly Dictionary<string, ComboBox> _gestureCombos = new();
     private readonly Dictionary<string, ComboBox> _fnCombos = new();
     private readonly Dictionary<string, ToolTip> _fnTips = new();
@@ -84,9 +88,15 @@ public sealed class SettingsForm : Form
 
         BuildUi();
         LoadSettings();
+        ApplyLanguage();
 
         KeyboardHook.Instance.KeyCaptured += OnKeyCaptured;
-        Disposed += (_, _) => KeyboardHook.Instance.KeyCaptured -= OnKeyCaptured;
+        Lang.Changed += ApplyLanguage;
+        Disposed += (_, _) =>
+        {
+            KeyboardHook.Instance.KeyCaptured -= OnKeyCaptured;
+            Lang.Changed -= ApplyLanguage;
+        };
     }
 
     protected override void OnPaint(PaintEventArgs e)
@@ -101,7 +111,8 @@ public sealed class SettingsForm : Form
         var card = new ModernPanel { Location = new Point(16, y), Size = new Size(508, height) };
         card.Controls.Add(new Label
         {
-            Text = title,
+            Text = Lang.T(title),
+            Tag = title,
             Location = new Point(16, 11),
             Size = new Size(470, 20),
             ForeColor = Theme.Accent,
@@ -109,6 +120,30 @@ public sealed class SettingsForm : Form
         });
         Controls.Add(card);
         return card;
+    }
+
+    private void ApplyLanguage()
+    {
+        ApplyText(this);
+        _versionLabel.Text = Lang.F("version.label", AppVersion.Display);
+        _trButton.IsAccent = Lang.Current == Lang.Turkish;
+        _enButton.IsAccent = Lang.Current == Lang.English;
+        _trButton.Invalidate();
+        _enButton.Invalidate();
+    }
+
+    private static void ApplyText(Control parent)
+    {
+        foreach (Control control in parent.Controls)
+        {
+            if (control.Tag is string tag && tag.Length > 0)
+            {
+                control.Text = tag.StartsWith("gesturelabel.", StringComparison.Ordinal)
+                    ? GestureNames.Display(tag["gesturelabel.".Length..])
+                    : Lang.T(tag);
+            }
+            if (control.HasChildren) ApplyText(control);
+        }
     }
 
     private void BuildUi()
@@ -137,6 +172,13 @@ public sealed class SettingsForm : Form
             ForeColor = Theme.Muted,
             Font = new Font("Segoe UI", 9F)
         });
+        _trButton.Location = new Point(374, 18);
+        _enButton.Location = new Point(414, 18);
+        _trButton.Click += (_, _) => Lang.Set(Lang.Turkish);
+        _enButton.Click += (_, _) => Lang.Set(Lang.English);
+        header.Controls.Add(_trButton);
+        header.Controls.Add(_enButton);
+
         var minimize = new ModernButton { Text = "—", Location = new Point(466, 18), Size = new Size(28, 28), Font = new Font("Segoe UI", 10F) };
         minimize.Click += (_, _) => WindowState = FormWindowState.Minimized;
         var close = new ModernButton { Text = "✕", Location = new Point(500, 18), Size = new Size(28, 28), Font = new Font("Segoe UI", 10F) };
@@ -149,10 +191,10 @@ public sealed class SettingsForm : Form
         Controls.Add(header);
 
         // --- Fare tuşları ---
-        var buttons = AddCard("FARE TUŞLARI", 84, 156);
-        buttons.Controls.Add(NewLabel("Tuş 3 (tekerlek):", 16, 40));
-        buttons.Controls.Add(NewLabel("Tuş 4 (yan tuş 1):", 16, 70));
-        buttons.Controls.Add(NewLabel("Tuş 5 (yan tuş 2):", 16, 100));
+        var buttons = AddCard("card.mouse", 84, 156);
+        buttons.Controls.Add(NewLabel("lbl.button3", 16, 40));
+        buttons.Controls.Add(NewLabel("lbl.button4", 16, 70));
+        buttons.Controls.Add(NewLabel("lbl.button5", 16, 100));
         _button3.Location = new Point(170, 37);
         _button4.Location = new Point(170, 67);
         _button5.Location = new Point(170, 97);
@@ -163,7 +205,7 @@ public sealed class SettingsForm : Form
         buttons.Controls.Add(_swap);
 
         // --- Jestler ---
-        var gestures = AddCard("JESTLER   (k: 55-130 px, u: ≥130 px, en az 200 ms)", 252, 258);
+        var gestures = AddCard("card.gestures", 252, 258);
         _gesturesEnabled.Location = new Point(16, 40);
         gestures.Controls.Add(_gesturesEnabled);
         for (int i = 0; i < GestureNames.All.Length; i++)
@@ -174,7 +216,7 @@ public sealed class SettingsForm : Form
             int labelX = column == 0 ? 16 : 270;
             int comboX = column == 0 ? 130 : 384;
 
-            var label = NewLabel(GestureNames.Display(direction), labelX, 66 + row * 22, 110, true);
+            var label = NewLabel("gesturelabel." + direction, labelX, 66 + row * 22, 110, true);
             label.Font = new Font("Segoe UI", 8F);
             gestures.Controls.Add(label);
 
@@ -187,7 +229,7 @@ public sealed class SettingsForm : Form
         }
 
         // --- Genel ---
-        var general = AddCard("GENEL", 522, 136);
+        var general = AddCard("card.general", 522, 136);
         _wheelEnabled.Location = new Point(16, 38);
         _autoStart.Location = new Point(16, 62);
         _overlayEnabled.Location = new Point(16, 86);
@@ -198,7 +240,7 @@ public sealed class SettingsForm : Form
         general.Controls.Add(_fnEnabled);
 
         // --- Fn tuşları ---
-        var fn = AddCard("KLAVYE — Fn TUŞLARI   (Öğren: tuşa basarak kodu yakala)", 670, 190);
+        var fn = AddCard("card.fn", 670, 190);
         var fnFont = new Font("Segoe UI", 8F);
         for (int i = 0; i < FnKeys.All.Length; i++)
         {
@@ -222,7 +264,8 @@ public sealed class SettingsForm : Form
 
             var learn = new ModernButton
             {
-                Text = "Öğren",
+                Text = Lang.T("btn.learn"),
+                Tag = "btn.learn",
                 Location = new Point(buttonX, 41 + row * 22),
                 Size = new Size(48, 22),
                 Font = fnFont
@@ -239,18 +282,14 @@ public sealed class SettingsForm : Form
         _status.Size = new Size(480, 20);
         Controls.Add(_status);
 
-        Controls.Add(new Label
-        {
-            Text = $"A4Tech Control  •  Sürüm {AppVersion.Display}",
-            Location = new Point(20, 902),
-            Size = new Size(280, 30),
-            ForeColor = Theme.Muted,
-            Font = new Font("Segoe UI", 9F)
-        });
+        _versionLabel.Location = new Point(20, 902);
+        _versionLabel.Size = new Size(280, 30);
+        Controls.Add(_versionLabel);
 
         var save = new ModernButton
         {
-            Text = "Kaydet",
+            Text = Lang.T("btn.save"),
+            Tag = "btn.save",
             Location = new Point(330, 902),
             Size = new Size(90, 32),
             IsAccent = true,
@@ -258,7 +297,8 @@ public sealed class SettingsForm : Form
         };
         var cancel = new ModernButton
         {
-            Text = "Vazgeç",
+            Text = Lang.T("btn.cancel"),
+            Tag = "btn.cancel",
             Location = new Point(430, 902),
             Size = new Size(90, 32),
             Font = new Font("Segoe UI", 9.5F)
@@ -307,7 +347,7 @@ public sealed class SettingsForm : Form
     {
         _capturingSlot = slot;
         KeyboardHook.Instance.CaptureNext = true;
-        _status.Text = $"{FnKeys.Display(slot)} için bir tuşa basın... (Escape = iptal)";
+        _status.Text = Lang.F("status.capturing", FnKeys.Display(slot));
     }
 
     private void OnKeyCaptured(int vk)
@@ -318,12 +358,12 @@ public sealed class SettingsForm : Form
 
         if (vk < 0)
         {
-            _status.Text = "Öğrenme iptal edildi.";
+            _status.Text = Lang.T("status.cancelled");
             return;
         }
 
         AppSettings.Current.FnTriggers[slot] = vk;
-        _status.Text = $"{FnKeys.Display(slot)} → {FnKeys.KeyName(vk)} (0x{vk:X2}) öğrenildi. Kaydet'e basmayı unutmayın.";
+        _status.Text = Lang.F("status.learned", FnKeys.Display(slot), FnKeys.KeyName(vk), vk);
         if (_fnGroupControls.TryGetValue(slot, out var control))
             _fnTips[slot].SetToolTip(control,
                 $"Tetikleyici: {FnKeys.KeyName(vk)} (0x{vk:X2})\nDeğiştirmek için tıkla, sonra tuşa bas.");
@@ -345,8 +385,8 @@ public sealed class SettingsForm : Form
             if (!ActionDispatcher.IsValid(value))
             {
                 MessageBox.Show(this,
-                    $"\"{name}\" için geçersiz eylem: \"{value}\"\n\nÖrnek: VolumeUp, Mute, Ctrl+Shift+A",
-                    "Geçersiz ayar", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    Lang.F("validation.message", name, value),
+                    Lang.T("validation.title"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
         }

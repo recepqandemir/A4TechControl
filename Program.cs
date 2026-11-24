@@ -16,6 +16,8 @@ internal static class Program
         using var mutex = new Mutex(true, "A4TechControl_8F3C2A11", out bool createdNew);
         if (!createdNew) return;
 
+        Lang.Set(AppSettings.Current.Language, persist: false);
+
         // Eski isimden kalan açılış kaydını temizle.
         try
         {

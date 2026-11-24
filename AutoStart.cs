@@ -1,12 +1,12 @@
 using Microsoft.Win32;
 
-namespace A4TechCompanion;
+namespace A4TechControl;
 
 /// <summary>"Açılışta başlat" ayarını HKCU Run anahtarında tutar.</summary>
 public static class AutoStart
 {
     private const string RunKey = @"Software\Microsoft\Windows\CurrentVersion\Run";
-    private const string AppName = "A4TechCompanion";
+    private const string AppName = "A4TechControl";
 
     public static bool IsEnabled
     {

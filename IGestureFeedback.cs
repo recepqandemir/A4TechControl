@@ -1,6 +1,6 @@
-using static A4TechCompanion.NativeMethods;
+using static A4TechControl.NativeMethods;
 
-namespace A4TechCompanion;
+namespace A4TechControl;
 
 public interface IGestureFeedback
 {

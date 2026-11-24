@@ -1,10 +1,10 @@
 ; Inno Setup 6/7 betiği (opsiyonel). ISCC.exe ile derleyin.
 ; Ornek: "C:\Program Files\Inno Setup 7\ISCC.exe" setup.iss
 
-#define MyAppName "A4Tech Companion"
-#define MyAppVersion "1.0.0"
-#define MyAppPublisher "A4Tech Companion"
-#define MyAppExeName "A4TechCompanion.exe"
+#define MyAppName "A4Tech Control"
+#define MyAppVersion "1.0.1"
+#define MyAppPublisher "A4Tech Control"
+#define MyAppExeName "A4TechControl.exe"
 #define PublishDir "..\bin\Release\net8.0-windows\win-x64\publish"
 
 [Setup]
@@ -16,7 +16,7 @@ DefaultDirName={localappdata}\Programs\{#MyAppName}
 DefaultGroupName={#MyAppName}
 DisableProgramGroupPage=yes
 OutputDir=..\SetupOutput
-OutputBaseFilename=A4TechCompanion-Setup
+OutputBaseFilename=A4TechControl-Setup
 SetupIconFile=..\Resources\app.ico
 UninstallDisplayIcon={app}\{#MyAppExeName}
 Compression=lzma2

@@ -1,7 +1,7 @@
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 
-namespace A4TechCompanion;
+namespace A4TechControl;
 
 public static class Theme
 {
@@ -168,8 +168,10 @@ public sealed class ModernMenuRenderer : ToolStripProfessionalRenderer
 
     protected override void OnRenderItemText(ToolStripItemTextRenderEventArgs e)
     {
-        var color = e.Item.Selected || e.Item.Pressed ? Theme.Accent : Theme.Text;
-        TextRenderer.DrawText(e.Graphics, e.Text, e.ToolStrip.Font,
+        var color = !e.Item.Enabled
+            ? Theme.Muted
+            : (e.Item.Selected || e.Item.Pressed ? Theme.Accent : Theme.Text);
+        TextRenderer.DrawText(e.Graphics, e.Text, e.ToolStrip?.Font ?? SystemFonts.MenuFont,
             e.TextRectangle, color, e.TextFormat);
     }
 

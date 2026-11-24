@@ -1,6 +1,6 @@
-using static A4TechCompanion.NativeMethods;
+using static A4TechControl.NativeMethods;
 
-namespace A4TechCompanion;
+namespace A4TechControl;
 
 /// <summary>Tuş basılı çizilen yönü ve mesafeyi 16 jestten birine eşler.</summary>
 public static class GestureRecognizer

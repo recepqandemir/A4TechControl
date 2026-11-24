@@ -1,4 +1,4 @@
-namespace A4TechCompanion;
+namespace A4TechControl;
 
 /// <summary>
 /// 16 jest yönü: 8 ana yön × 2 mesafe (kısa / uzun).

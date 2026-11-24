@@ -1,6 +1,6 @@
-using static A4TechCompanion.NativeMethods;
+using static A4TechControl.NativeMethods;
 
-namespace A4TechCompanion;
+namespace A4TechControl;
 
 /// <summary>Klavye Fn+F1..F12 yuvalarının dahili anahtarları ve varsayılan tetikleyicileri.</summary>
 public static class FnKeys

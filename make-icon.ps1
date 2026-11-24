@@ -1,4 +1,4 @@
-# A4Tech Companion exe/tray ikonunu uretir (16/32/48/64 px, 32-bit alpha)
+# A4Tech Control exe/tray ikonunu uretir (16/32/48/64 px, 32-bit alpha)
 Add-Type -AssemblyName System.Drawing
 
 $outDir = Join-Path $PSScriptRoot 'Resources'

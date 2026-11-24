@@ -1,26 +1,26 @@
 <#
-    A4Tech Companion — kullanıcı seviyesinde kurulum (admin gerekmez).
+    A4Tech Control — kullanıcı seviyesinde kurulum (admin gerekmez).
     Kullanım: powershell -ExecutionPolicy Bypass -File .\Install.ps1
 #>
 param(
     [string]$Source = (Join-Path $PSScriptRoot '..\bin\Release\net8.0-windows\win-x64\publish'),
-    [string]$InstallDir = (Join-Path $env:LOCALAPPDATA 'Programs\A4TechCompanion'),
+    [string]$InstallDir = (Join-Path $env:LOCALAPPDATA 'Programs\A4TechControl'),
     [switch]$NoLaunch,
     [switch]$NoStartMenu
 )
 
 $ErrorActionPreference = 'Stop'
 $sourcePath = (Resolve-Path -LiteralPath $Source).Path
-$sourceExe = Join-Path $sourcePath 'A4TechCompanion.exe'
+$sourceExe = Join-Path $sourcePath 'A4TechControl.exe'
 
 if (-not (Test-Path -LiteralPath $sourceExe)) {
     throw "Kaynak exe bulunamadi: $sourceExe  -- once 'dotnet publish' calistirin."
 }
 
-Write-Host 'A4Tech Companion kuruluyor...' -ForegroundColor Cyan
+Write-Host 'A4Tech Control kuruluyor...' -ForegroundColor Cyan
 
 # Calisan kopya varsa kapat (dosya kilitli kalmasin).
-Get-Process -Name A4TechCompanion -ErrorAction SilentlyContinue | Stop-Process -Force
+Get-Process -Name A4TechControl -ErrorAction SilentlyContinue | Stop-Process -Force
 
 New-Item -ItemType Directory -Path $InstallDir -Force | Out-Null
 Get-ChildItem -LiteralPath $sourcePath -File | ForEach-Object {
@@ -28,20 +28,20 @@ Get-ChildItem -LiteralPath $sourcePath -File | ForEach-Object {
 }
 Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'Uninstall.ps1') -Destination $InstallDir -Force
 
-$exe = Join-Path $InstallDir 'A4TechCompanion.exe'
+$exe = Join-Path $InstallDir 'A4TechControl.exe'
 
 # Acilista baslat ayari varsa yeni kurulum yoluna guncelle (kapaliysa dokunma).
 $runKey = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Run'
-$existingRun = (Get-ItemProperty -Path $runKey -Name 'A4TechCompanion' -ErrorAction SilentlyContinue).A4TechCompanion
+$existingRun = (Get-ItemProperty -Path $runKey -Name 'A4TechControl' -ErrorAction SilentlyContinue).A4TechControl
 if ($existingRun) {
-    Set-ItemProperty -Path $runKey -Name 'A4TechCompanion' -Value "`"$exe`""
+    Set-ItemProperty -Path $runKey -Name 'A4TechControl' -Value "`"$exe`""
 }
 
 # Baslat menusu kisayolu
 if (-not $NoStartMenu) {
     $startMenu = Join-Path $env:APPDATA 'Microsoft\Windows\Start Menu\Programs'
     New-Item -ItemType Directory -Path $startMenu -Force | Out-Null
-    $shortcut = Join-Path $startMenu 'A4Tech Companion.lnk'
+    $shortcut = Join-Path $startMenu 'A4Tech Control.lnk'
     $shell = New-Object -ComObject WScript.Shell
     $link = $shell.CreateShortcut($shortcut)
     $link.TargetPath = $exe
@@ -52,12 +52,12 @@ if (-not $NoStartMenu) {
 }
 
 # Program Ekle/Kaldir kaydi (HKCU -> admin gerekmez)
-$uninstallKey = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\A4TechCompanion'
+$uninstallKey = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\A4TechControl'
 New-Item -Path $uninstallKey -Force | Out-Null
 $sizeKb = [math]::Round(((Get-ChildItem -LiteralPath $InstallDir -File | Measure-Object Length -Sum).Sum) / 1KB)
-Set-ItemProperty -Path $uninstallKey -Name DisplayName -Value 'A4Tech Companion'
-Set-ItemProperty -Path $uninstallKey -Name DisplayVersion -Value '1.0.0'
-Set-ItemProperty -Path $uninstallKey -Name Publisher -Value 'A4Tech Companion'
+Set-ItemProperty -Path $uninstallKey -Name DisplayName -Value 'A4Tech Control'
+Set-ItemProperty -Path $uninstallKey -Name DisplayVersion -Value '1.0.1'
+Set-ItemProperty -Path $uninstallKey -Name Publisher -Value 'A4Tech Control'
 Set-ItemProperty -Path $uninstallKey -Name DisplayIcon -Value $exe
 Set-ItemProperty -Path $uninstallKey -Name InstallLocation -Value $InstallDir
 Set-ItemProperty -Path $uninstallKey -Name EstimatedSize -Value $sizeKb
@@ -68,4 +68,4 @@ if (-not $NoLaunch) {
 }
 
 Write-Host "Kurulum tamamlandi: $InstallDir" -ForegroundColor Green
-Write-Host 'Baslat menusunde A4Tech Companion kisayolu olusturuldu.' -ForegroundColor Green
+Write-Host 'Baslat menusunde A4Tech Control kisayolu olusturuldu.' -ForegroundColor Green

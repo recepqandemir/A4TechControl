@@ -1,6 +1,6 @@
 using System.Drawing.Drawing2D;
 
-namespace A4TechCompanion;
+namespace A4TechControl;
 
 /// <summary>Tanınabilir, özel tepsi ikonu (mavi "i" yerine turuncu "A").</summary>
 public static class TrayIconFactory
@@ -15,7 +15,7 @@ public static class TrayIconFactory
         try
         {
             using var stream = typeof(TrayIconFactory).Assembly
-                .GetManifestResourceStream("A4TechCompanion.Resources.app.ico");
+                .GetManifestResourceStream("A4TechControl.Resources.app.ico");
             if (stream is not null)
             {
                 using var copy = new MemoryStream();

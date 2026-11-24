@@ -1,7 +1,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace A4TechCompanion;
+namespace A4TechControl;
 
 /// <summary>Sistem tepsisinde yaşayan uygulama. Ana form yoktur.</summary>
 public sealed class TrayAppContext : ApplicationContext
@@ -17,6 +17,7 @@ public sealed class TrayAppContext : ApplicationContext
     private readonly ToolStripMenuItem _fnItem;
     private readonly ToolStripMenuItem _wheelItem;
     private readonly ToolStripMenuItem _autoStartItem;
+    private readonly ToolStripMenuItem _versionItem;
     private readonly ToolStripMenuItem _exitItem;
     private SettingsForm? _settingsForm;
     private bool _idleHooked;
@@ -30,6 +31,7 @@ public sealed class TrayAppContext : ApplicationContext
         _fnItem = new ToolStripMenuItem("Fn tuş eşlemeleri");
         _wheelItem = new ToolStripMenuItem("4 yönlü tekerlek");
         _autoStartItem = new ToolStripMenuItem("Açılışta başlat");
+        _versionItem = new ToolStripMenuItem($"Sürüm {AppVersion.Display}") { Enabled = false };
         _exitItem = new ToolStripMenuItem("Çıkış");
 
         _settingsItem.Click += (_, _) => OpenSettings();
@@ -59,6 +61,7 @@ public sealed class TrayAppContext : ApplicationContext
             new ToolStripSeparator(),
             _autoStartItem,
             new ToolStripSeparator(),
+            _versionItem,
             _exitItem
         });
         _menu.Renderer = new ModernMenuRenderer();
@@ -68,7 +71,7 @@ public sealed class TrayAppContext : ApplicationContext
         _tray = new NotifyIcon
         {
             Icon = TrayIconFactory.Create(),
-            Text = "A4Tech Companion (FG35 / FGK10) — Ayarlar için çift tıkla",
+            Text = "A4Tech Control (FG35 / FGK10) — Ayarlar için çift tıkla",
             Visible = false,
             ContextMenuStrip = _menu
         };
@@ -92,7 +95,7 @@ public sealed class TrayAppContext : ApplicationContext
 
         _tray.Visible = true;
         _tray.ShowBalloonTip(4000,
-            "A4Tech Companion",
+            "A4Tech Control",
             "FG35 / FGK10 hazır. Ayarlar için tepsi ikonuna çift tıkla.",
             ToolTipIcon.Info);
     }

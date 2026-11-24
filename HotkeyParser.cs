@@ -1,6 +1,6 @@
 using System.Windows.Forms;
 
-namespace A4TechCompanion;
+namespace A4TechControl;
 
 /// <summary>"Ctrl+Shift+A", "Alt+F4", "Win+E" gibi metinleri sanal tuşlara çevirir.</summary>
 public static class HotkeyParser

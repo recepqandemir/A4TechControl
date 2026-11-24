@@ -1,8 +1,8 @@
 using System.Drawing.Drawing2D;
 using System.Runtime.InteropServices;
-using static A4TechCompanion.NativeMethods;
+using static A4TechControl.NativeMethods;
 
-namespace A4TechCompanion;
+namespace A4TechControl;
 
 /// <summary>
 /// Jest çizilirken imlecin yanında görünen, tıklamaları geçiren şeffaf ok katmanı.

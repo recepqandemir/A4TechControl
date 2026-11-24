@@ -1,8 +1,8 @@
 using System.ComponentModel;
 using System.Runtime.InteropServices;
-using static A4TechCompanion.NativeMethods;
+using static A4TechControl.NativeMethods;
 
-namespace A4TechCompanion;
+namespace A4TechControl;
 
 /// <summary>
 /// Tüm sistem fare olaylarını WH_MOUSE_LL ile izler:

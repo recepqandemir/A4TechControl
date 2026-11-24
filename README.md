@@ -1,4 +1,4 @@
-# A4Tech Companion — FG35 / FGK10
+# A4Tech Control — FG35 / FGK10
 
 A4Tech'in Windows 11'de sorun çıkaran 8-in-1 / 16-gesture yazılımının yerine geçen,
 hafif ve yalnızca kullanıcı modunda çalışan alternatif.
@@ -33,8 +33,8 @@ hafif ve yalnızca kullanıcı modunda çalışan alternatif.
 - Özel turuncu **"A4"** tepsi ikonu + açılış balon bildirimi (eski genel mavi "i" ikonu yerine)
 - Koyu temalı, yuvarlatılmış kartlar ve turuncu vurgularla modern arayüz; standart Windows başlık çubuğu yerine özel başlık (sürüklenebilir, simge durumuna küçültme/kapatma)
 - Sistem tepsisinden hızlı ayarlar
-- Ayarlar `%AppData%\A4TechCompanion\settings.json` içinde saklanır
-- Hatalar `%AppData%\A4TechCompanion\error.log` içine yazılır
+- Ayarlar `%AppData%\A4TechControl\settings.json` içinde saklanır
+- Hatalar `%AppData%\A4TechControl\error.log` içine yazılır
 
 ## Derleme
 
@@ -44,7 +44,7 @@ Gereksinim: .NET 8 SDK (Windows).
 dotnet build -c Release
 ```
 
-Çıktı: `bin\Release\net8.0-windows\A4TechCompanion.exe` (64-bit).
+Çıktı: `bin\Release\net8.0-windows\A4TechControl.exe` (64-bit).
 
 Tek dosyalık, bağımlılıksız dağıtım için:
 
@@ -72,10 +72,10 @@ dotnet publish -c Release -r win-x64 --self-contained true `
 
 En kolay yöntem: `Installer\Kurulum.bat` dosyasına çift tıkla. Admin yetkisi gerekmez.
 
-- Kurulum yeri: `%LOCALAPPDATA%\Programs\A4TechCompanion`
+- Kurulum yeri: `%LOCALAPPDATA%\Programs\A4TechControl`
 - Başlat menüsüne kısayol eklenir
 - Program Ekle/Kaldır listesine kayıt olur
-- Kaldırmak için `Installer\Kaldir.bat` (ayarları korumak için varsayılan) veya `%LOCALAPPDATA%\Programs\A4TechCompanion\Uninstall.ps1`
+- Kaldırmak için `Installer\Kaldir.bat` (ayarları korumak için varsayılan) veya `%LOCALAPPDATA%\Programs\A4TechControl\Uninstall.ps1`
 
 Komut satırından:
 

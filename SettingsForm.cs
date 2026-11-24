@@ -2,7 +2,7 @@ using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
-namespace A4TechCompanion;
+namespace A4TechControl;
 
 public sealed class SettingsForm : Form
 {
@@ -70,7 +70,7 @@ public sealed class SettingsForm : Form
 
     public SettingsForm()
     {
-        Text = "A4Tech Companion — FG35 / FGK10";
+        Text = "A4Tech Control — FG35 / FGK10";
         StartPosition = FormStartPosition.CenterScreen;
         FormBorderStyle = FormBorderStyle.None;
         ShowInTaskbar = true;
@@ -123,7 +123,7 @@ public sealed class SettingsForm : Form
         };
         header.Controls.Add(new Label
         {
-            Text = "A4Tech Companion",
+            Text = "A4Tech Control",
             Location = new Point(20, 12),
             Size = new Size(360, 30),
             ForeColor = Theme.Text,
@@ -238,6 +238,15 @@ public sealed class SettingsForm : Form
         _status.Location = new Point(20, 874);
         _status.Size = new Size(480, 20);
         Controls.Add(_status);
+
+        Controls.Add(new Label
+        {
+            Text = $"A4Tech Control  •  Sürüm {AppVersion.Display}",
+            Location = new Point(20, 902),
+            Size = new Size(280, 30),
+            ForeColor = Theme.Muted,
+            Font = new Font("Segoe UI", 9F)
+        });
 
         var save = new ModernButton
         {

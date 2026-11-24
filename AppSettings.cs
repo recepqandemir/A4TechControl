@@ -1,15 +1,15 @@
 using System.Text.Json;
 
-namespace A4TechCompanion;
+namespace A4TechControl;
 
 /// <summary>
-/// Kullanıcı ayarları. %AppData%\A4TechCompanion\settings.json içinde saklanır.
+/// Kullanıcı ayarları. %AppData%\A4TechControl\settings.json içinde saklanır.
 /// Eksik/bozuk dosya sessizce varsayılanlara düşer; uygulama asla çökmez.
 /// </summary>
 public sealed class AppSettings
 {
     private static readonly string SettingsDir = Path.Combine(
-        Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "A4TechCompanion");
+        Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "A4TechControl");
     private static readonly string SettingsPath = Path.Combine(SettingsDir, "settings.json");
 
     public static AppSettings Current { get; private set; } = Load();
@@ -31,6 +31,16 @@ public sealed class AppSettings
     {
         try
         {
+            // Eski isimden (A4TechCompanion) kalan ayarları taşı.
+            var oldPath = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                "A4TechCompanion", "settings.json");
+            if (!File.Exists(SettingsPath) && File.Exists(oldPath))
+            {
+                Directory.CreateDirectory(SettingsDir);
+                File.Copy(oldPath, SettingsPath, true);
+            }
+
             if (!File.Exists(SettingsPath))
                 return new AppSettings();
 

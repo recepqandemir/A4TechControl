@@ -1,6 +1,7 @@
 using System.Threading;
+using Microsoft.Win32;
 
-namespace A4TechCompanion;
+namespace A4TechControl;
 
 internal static class Program
 {
@@ -12,8 +13,17 @@ internal static class Program
         Application.SetCompatibleTextRenderingDefault(false);
 
         // Aynı anda birden fazla kopya çalışmasın (çift hook = çift eylem).
-        using var mutex = new Mutex(true, "A4TechCompanion_8F3C2A11", out bool createdNew);
+        using var mutex = new Mutex(true, "A4TechControl_8F3C2A11", out bool createdNew);
         if (!createdNew) return;
+
+        // Eski isimden kalan açılış kaydını temizle.
+        try
+        {
+            using var runKey = Registry.CurrentUser.OpenSubKey(
+                @"Software\Microsoft\Windows\CurrentVersion\Run", true);
+            runKey?.DeleteValue("A4TechCompanion", false);
+        }
+        catch { }
 
         // İlk çalıştırmada varsayılan "Açılışta başlat" ayarını gerçekten kaydet.
         if (AppSettings.Current.AutoLaunchOnBoot && !AutoStart.IsEnabled)

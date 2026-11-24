@@ -1,6 +1,6 @@
 using System.Runtime.InteropServices;
 
-namespace A4TechCompanion;
+namespace A4TechControl;
 
 /// <summary>
 /// SendInput ile yapay klavye/fare olayları gönderir.

@@ -1,4 +1,4 @@
-namespace A4TechCompanion;
+namespace A4TechControl;
 
 /// <summary>Bir tuşa/jeste atanan eylemi çalıştırır.</summary>
 public static class ActionDispatcher

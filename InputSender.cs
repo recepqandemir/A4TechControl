@@ -46,7 +46,11 @@ public static class InputSender
         NativeMethods.SendInput((uint)inputs.Length, inputs, InputSize);
     }
 
-    public static void TapKey(ushort vk) => Send(MakeKey(vk, false), MakeKey(vk, true));
+    public static void TapKey(ushort vk)
+    {
+        Send(MakeKey(vk, false), MakeKey(vk, true));
+        VolumeEchoGuard.Mark(vk);
+    }
 
     public static void TapMouseRight() =>
         Send(MakeMouse(NativeMethods.MOUSEEVENTF_RIGHTDOWN),
@@ -71,5 +75,6 @@ public static class InputSender
         inputs.Add(MakeKey(key, true));
         for (int i = modifiers.Length - 1; i >= 0; i--) inputs.Add(MakeKey(modifiers[i], true));
         Send(inputs.ToArray());
+        if (VolumeEchoGuard.IsMediaKey(key)) VolumeEchoGuard.Mark(key);
     }
 }

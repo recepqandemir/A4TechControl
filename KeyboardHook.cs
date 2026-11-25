@@ -51,6 +51,10 @@ public sealed class KeyboardHook : IDisposable
                         return new IntPtr(1);
                     }
 
+                    // Fare/alıcı hafızasından gelen yankı tuşlarını sustur.
+                    if (VolumeEchoGuard.ShouldSuppress((ushort)vk))
+                        return new IntPtr(1);
+
                     var settings = AppSettings.Current;
                     if (settings.EnableFnMapping)
                     {

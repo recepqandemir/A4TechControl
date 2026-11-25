@@ -1,5 +1,6 @@
 using System.ComponentModel;
 using System.Runtime.InteropServices;
+using System.Windows.Forms;
 using static A4TechControl.NativeMethods;
 
 namespace A4TechControl;
@@ -23,6 +24,19 @@ public sealed class MouseHook : IDisposable
     private POINT _gestureStart;
 
     private const long GestureHoldMs = 200;
+
+    private readonly System.Windows.Forms.Timer _repeatTimer = new() { Interval = 350 };
+    private string? _repeatAction;
+
+    public MouseHook()
+    {
+        _repeatTimer.Tick += (_, _) =>
+        {
+            if (_repeatAction is null) return;
+            ActionDispatcher.Execute(_repeatAction);
+            _repeatTimer.Interval = 120;   // ilk gecikmeden sonra klavye tekrarı hızı
+        };
+    }
 
     /// <summary>Jest çizilirken ekran geri bildirimini çizen katman (isteğe bağlı).</summary>
     public IGestureFeedback? Feedback { get; set; }
@@ -68,6 +82,7 @@ public sealed class MouseHook : IDisposable
                     return false;
                 ActionDispatcher.Execute(action);
                 _middleConsumed = true;
+                StartRepeat(action);
                 return true;
             }
 
@@ -75,6 +90,7 @@ public sealed class MouseHook : IDisposable
                 if (_middleConsumed)
                 {
                     _middleConsumed = false;
+                    StopRepeatIfIdle();
                     return true;
                 }
                 return false;
@@ -100,11 +116,13 @@ public sealed class MouseHook : IDisposable
                 else
                 {
                     ActionDispatcher.Execute(action);
+                    StartRepeat(action);
                     consumed = true;
                 }
 
                 if (consumed)
                 {
+                    VolumeEchoGuard.SideButtonHeld = true;
                     if (isSide4) _side4Consumed = true;
                     else _side5Consumed = true;
                 }
@@ -114,17 +132,19 @@ public sealed class MouseHook : IDisposable
             case WM_XBUTTONUP:
             {
                 uint button = data.mouseData >> 16;
+                bool consumed = false;
                 if (button == XBUTTON1 && _side4Consumed)
                 {
                     _side4Consumed = false;
-                    return true;
+                    consumed = true;
                 }
                 if (button == XBUTTON2 && _side5Consumed)
                 {
                     _side5Consumed = false;
-                    return true;
+                    consumed = true;
                 }
-                return false;
+                if (consumed) StopRepeatIfIdle();
+                return consumed;
             }
 
             case WM_RBUTTONDOWN:
@@ -188,6 +208,21 @@ public sealed class MouseHook : IDisposable
         }
     }
 
+    private void StartRepeat(string action)
+    {
+        _repeatAction = action;
+        _repeatTimer.Interval = 350;
+        _repeatTimer.Start();
+    }
+
+    private void StopRepeatIfIdle()
+    {
+        if (_side4Consumed || _side5Consumed || _middleConsumed) return;
+        _repeatTimer.Stop();
+        _repeatAction = null;
+        VolumeEchoGuard.SideButtonHeld = false;
+    }
+
     private static string ResolveSideAction(AppSettings s, bool isSide4)
     {
         if (s.SwapSideButtons)
@@ -203,5 +238,7 @@ public sealed class MouseHook : IDisposable
             _handle = IntPtr.Zero;
         }
         _proc = null;
+        _repeatTimer.Stop();
+        _repeatTimer.Dispose();
     }
 }

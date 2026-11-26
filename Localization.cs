@@ -51,7 +51,7 @@ public static class Lang
         ["btn.save"] = new("Kaydet", "Save"),
         ["btn.cancel"] = new("Vazgeç", "Cancel"),
         ["btn.learn"] = new("Öğren", "Learn"),
-        ["version.label"] = new("A4Tech Control  •  Sürüm {0}", "A4Tech Control  •  Version {0}"),
+        ["version.label"] = new("A4Tech Control  v{0}", "A4Tech Control  v{0}"),
 
         // Durum mesajları
         ["status.capturing"] = new("{0} için bir tuşa basın... (Escape = iptal)",

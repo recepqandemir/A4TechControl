@@ -43,7 +43,7 @@ public sealed class SettingsForm : Form
         return combo;
     }
 
-    private static Label NewLabel(string key, int x, int y, int w = 150, bool muted = false) => new()
+    private static Label NewLabel(string key, int x, int y, int w = 190, bool muted = false) => new()
     {
         Text = Lang.T(key),
         Tag = key,
@@ -80,8 +80,7 @@ public sealed class SettingsForm : Form
         ShowInTaskbar = true;
         KeyPreview = true;
         ClientSize = new Size(540, 940);
-        AutoScaleMode = AutoScaleMode.Dpi;
-        AutoScaleDimensions = new SizeF(96F, 96F);
+        AutoScaleMode = AutoScaleMode.None;
         BackColor = Theme.Window;
         ForeColor = Theme.Text;
         Font = new Font("Segoe UI", 9F);
@@ -101,6 +100,15 @@ public sealed class SettingsForm : Form
         };
     }
 
+    protected override void OnLoad(EventArgs e)
+    {
+        base.OnLoad(e);
+        // Fontlar DPI ile büyüyor; kontrolleri de aynı oranda ölçekle ki kesilmesinler.
+        float factor = DeviceDpi / 96f;
+        if (Math.Abs(factor - 1f) > 0.01f)
+            Scale(new SizeF(factor, factor));
+    }
+
     protected override void OnPaint(PaintEventArgs e)
     {
         base.OnPaint(e);
@@ -116,7 +124,7 @@ public sealed class SettingsForm : Form
             Text = Lang.T(title),
             Tag = title,
             Location = new Point(16, 11),
-            Size = new Size(470, 22),
+            Size = new Size(480, 22),
             ForeColor = Theme.Accent,
             Font = new Font("Segoe UI", 9.5F, FontStyle.Bold)
         });
@@ -197,9 +205,9 @@ public sealed class SettingsForm : Form
         buttons.Controls.Add(NewLabel("lbl.button3", 16, 40));
         buttons.Controls.Add(NewLabel("lbl.button4", 16, 70));
         buttons.Controls.Add(NewLabel("lbl.button5", 16, 100));
-        _button3.Location = new Point(170, 37);
-        _button4.Location = new Point(170, 67);
-        _button5.Location = new Point(170, 97);
+        _button3.Location = new Point(210, 37);
+        _button4.Location = new Point(210, 67);
+        _button5.Location = new Point(210, 97);
         _swap.Location = new Point(16, 130);
         buttons.Controls.Add(_button3);
         buttons.Controls.Add(_button4);
@@ -285,7 +293,7 @@ public sealed class SettingsForm : Form
         Controls.Add(_status);
 
         _versionLabel.Location = new Point(20, 902);
-        _versionLabel.Size = new Size(340, 34);
+        _versionLabel.Size = new Size(300, 34);
         Controls.Add(_versionLabel);
 
         var save = new ModernButton
@@ -293,7 +301,7 @@ public sealed class SettingsForm : Form
             Text = Lang.T("btn.save"),
             Tag = "btn.save",
             Location = new Point(330, 902),
-            Size = new Size(90, 38),
+            Size = new Size(100, 38),
             IsAccent = true,
             Font = new Font("Segoe UI", 9.5F, FontStyle.Bold)
         };
@@ -301,8 +309,8 @@ public sealed class SettingsForm : Form
         {
             Text = Lang.T("btn.cancel"),
             Tag = "btn.cancel",
-            Location = new Point(430, 902),
-            Size = new Size(90, 38),
+            Location = new Point(435, 902),
+            Size = new Size(95, 38),
             Font = new Font("Segoe UI", 9.5F)
         };
         save.Click += Save_Click;

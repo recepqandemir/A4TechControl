@@ -17,31 +17,12 @@ public sealed class SettingsForm : Form
         SendMessage(Handle, WmNcLButtonDown, new IntPtr(HtCaption), IntPtr.Zero);
     }
 
-    private static ComboBox NewCombo()
+    private static ModernComboBox NewCombo() => new()
     {
-        var combo = new ComboBox
-        {
-            DropDownStyle = ComboBoxStyle.DropDown,
-            FlatStyle = FlatStyle.Flat,
-            BackColor = Theme.Input,
-            ForeColor = Theme.Text,
-            Width = 210,
-            Font = new Font("Segoe UI", 9F),
-            DrawMode = DrawMode.OwnerDrawFixed,
-            ItemHeight = 22
-        };
-        combo.DrawItem += (sender, e) =>
-        {
-            if (e.Index < 0) return;
-            bool selected = e.State.HasFlag(DrawItemState.Selected);
-            using var brush = new SolidBrush(selected ? Theme.Accent : Theme.Input);
-            e.Graphics.FillRectangle(brush, e.Bounds);
-            TextRenderer.DrawText(e.Graphics, combo.Items[e.Index]?.ToString() ?? string.Empty,
-                combo.Font, e.Bounds, selected ? Theme.Window : Theme.Text,
-                TextFormatFlags.VerticalCenter | TextFormatFlags.Left);
-        };
-        return combo;
-    }
+        Width = 210,
+        Height = 20,
+        Font = new Font("Segoe UI", 9F)
+    };
 
     private static Label NewLabel(string key, int x, int y, int w = 190, bool muted = false) => new()
     {
@@ -53,9 +34,9 @@ public sealed class SettingsForm : Form
         Font = new Font("Segoe UI", 9F)
     };
 
-    private readonly ComboBox _button3 = NewCombo();
-    private readonly ComboBox _button4 = NewCombo();
-    private readonly ComboBox _button5 = NewCombo();
+    private readonly ModernComboBox _button3 = NewCombo();
+    private readonly ModernComboBox _button4 = NewCombo();
+    private readonly ModernComboBox _button5 = NewCombo();
     private readonly ModernCheckBox _swap = new() { Text = "4. ve 5. tuşları takas et", Tag = "chk.swap", Size = new Size(380, 22) };
     private readonly ModernCheckBox _gesturesEnabled = new() { Text = "Jestleri etkinleştir (sağ tuş basılı tut + hareket)", Tag = "chk.gestures", Size = new Size(470, 22) };
     private readonly ModernCheckBox _overlayEnabled = new() { Text = "Jest sırasında ekranda ok göster", Tag = "chk.overlay", Size = new Size(400, 22) };
@@ -66,8 +47,8 @@ public sealed class SettingsForm : Form
     private readonly Label _versionLabel = new() { ForeColor = Theme.Muted, Font = new Font("Segoe UI", 9F) };
     private readonly ModernButton _trButton = new() { Text = "TR", Size = new Size(34, 28), Font = new Font("Segoe UI", 9F, FontStyle.Bold) };
     private readonly ModernButton _enButton = new() { Text = "EN", Size = new Size(34, 28), Font = new Font("Segoe UI", 9F, FontStyle.Bold) };
-    private readonly Dictionary<string, ComboBox> _gestureCombos = new();
-    private readonly Dictionary<string, ComboBox> _fnCombos = new();
+    private readonly Dictionary<string, ModernComboBox> _gestureCombos = new();
+    private readonly Dictionary<string, ModernComboBox> _fnCombos = new();
     private readonly Dictionary<string, ToolTip> _fnTips = new();
     private readonly Dictionary<string, Control> _fnGroupControls = new();
     private string? _capturingSlot;

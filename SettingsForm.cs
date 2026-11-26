@@ -28,7 +28,7 @@ public sealed class SettingsForm : Form
             Width = 210,
             Font = new Font("Segoe UI", 9F),
             DrawMode = DrawMode.OwnerDrawFixed,
-            ItemHeight = 20
+            ItemHeight = 22
         };
         combo.DrawItem += (sender, e) =>
         {
@@ -48,7 +48,7 @@ public sealed class SettingsForm : Form
         Text = Lang.T(key),
         Tag = key,
         Location = new Point(x, y),
-        Size = new Size(w, 20),
+        Size = new Size(w, 22),
         ForeColor = muted ? Theme.Muted : Theme.Text,
         Font = new Font("Segoe UI", 9F)
     };
@@ -56,12 +56,12 @@ public sealed class SettingsForm : Form
     private readonly ComboBox _button3 = NewCombo();
     private readonly ComboBox _button4 = NewCombo();
     private readonly ComboBox _button5 = NewCombo();
-    private readonly ModernCheckBox _swap = new() { Text = "4. ve 5. tuşları takas et", Tag = "chk.swap", Size = new Size(380, 20) };
-    private readonly ModernCheckBox _gesturesEnabled = new() { Text = "Jestleri etkinleştir (sağ tuş basılı tut + hareket)", Tag = "chk.gestures", Size = new Size(470, 20) };
-    private readonly ModernCheckBox _overlayEnabled = new() { Text = "Jest sırasında ekranda ok göster", Tag = "chk.overlay", Size = new Size(400, 20) };
-    private readonly ModernCheckBox _fnEnabled = new() { Text = "Fn tuş eşlemelerini etkinleştir", Tag = "chk.fn", Size = new Size(400, 20) };
-    private readonly ModernCheckBox _wheelEnabled = new() { Text = "4 yönlü tekerleği etkinleştir", Tag = "chk.wheel", Size = new Size(400, 20) };
-    private readonly ModernCheckBox _autoStart = new() { Text = "Windows ile birlikte başlat", Tag = "chk.autostart", Size = new Size(400, 20) };
+    private readonly ModernCheckBox _swap = new() { Text = "4. ve 5. tuşları takas et", Tag = "chk.swap", Size = new Size(380, 22) };
+    private readonly ModernCheckBox _gesturesEnabled = new() { Text = "Jestleri etkinleştir (sağ tuş basılı tut + hareket)", Tag = "chk.gestures", Size = new Size(470, 22) };
+    private readonly ModernCheckBox _overlayEnabled = new() { Text = "Jest sırasında ekranda ok göster", Tag = "chk.overlay", Size = new Size(400, 22) };
+    private readonly ModernCheckBox _fnEnabled = new() { Text = "Fn tuş eşlemelerini etkinleştir", Tag = "chk.fn", Size = new Size(400, 22) };
+    private readonly ModernCheckBox _wheelEnabled = new() { Text = "4 yönlü tekerleği etkinleştir", Tag = "chk.wheel", Size = new Size(400, 22) };
+    private readonly ModernCheckBox _autoStart = new() { Text = "Windows ile birlikte başlat", Tag = "chk.autostart", Size = new Size(400, 22) };
     private readonly Label _status = new() { Text = "", ForeColor = Theme.Muted, Font = new Font("Segoe UI", 9F) };
     private readonly Label _versionLabel = new() { ForeColor = Theme.Muted, Font = new Font("Segoe UI", 9F) };
     private readonly ModernButton _trButton = new() { Text = "TR", Size = new Size(34, 28), Font = new Font("Segoe UI", 9F, FontStyle.Bold) };
@@ -80,6 +80,8 @@ public sealed class SettingsForm : Form
         ShowInTaskbar = true;
         KeyPreview = true;
         ClientSize = new Size(540, 940);
+        AutoScaleMode = AutoScaleMode.Dpi;
+        AutoScaleDimensions = new SizeF(96F, 96F);
         BackColor = Theme.Window;
         ForeColor = Theme.Text;
         Font = new Font("Segoe UI", 9F);
@@ -114,7 +116,7 @@ public sealed class SettingsForm : Form
             Text = Lang.T(title),
             Tag = title,
             Location = new Point(16, 11),
-            Size = new Size(470, 20),
+            Size = new Size(470, 22),
             ForeColor = Theme.Accent,
             Font = new Font("Segoe UI", 9.5F, FontStyle.Bold)
         });
@@ -160,7 +162,7 @@ public sealed class SettingsForm : Form
         {
             Text = "A4Tech Control",
             Location = new Point(20, 12),
-            Size = new Size(360, 30),
+            Size = new Size(360, 38),
             ForeColor = Theme.Text,
             Font = new Font("Segoe UI", 16F, FontStyle.Bold)
         });
@@ -168,7 +170,7 @@ public sealed class SettingsForm : Form
         {
             Text = "FG35 / FGK10  •  Windows 11",
             Location = new Point(21, 44),
-            Size = new Size(360, 18),
+            Size = new Size(360, 24),
             ForeColor = Theme.Muted,
             Font = new Font("Segoe UI", 9F)
         });
@@ -279,11 +281,11 @@ public sealed class SettingsForm : Form
         }
 
         _status.Location = new Point(20, 874);
-        _status.Size = new Size(480, 20);
+        _status.Size = new Size(480, 22);
         Controls.Add(_status);
 
         _versionLabel.Location = new Point(20, 902);
-        _versionLabel.Size = new Size(280, 30);
+        _versionLabel.Size = new Size(340, 34);
         Controls.Add(_versionLabel);
 
         var save = new ModernButton
@@ -291,7 +293,7 @@ public sealed class SettingsForm : Form
             Text = Lang.T("btn.save"),
             Tag = "btn.save",
             Location = new Point(330, 902),
-            Size = new Size(90, 32),
+            Size = new Size(90, 38),
             IsAccent = true,
             Font = new Font("Segoe UI", 9.5F, FontStyle.Bold)
         };
@@ -300,7 +302,7 @@ public sealed class SettingsForm : Form
             Text = Lang.T("btn.cancel"),
             Tag = "btn.cancel",
             Location = new Point(430, 902),
-            Size = new Size(90, 32),
+            Size = new Size(90, 38),
             Font = new Font("Segoe UI", 9.5F)
         };
         save.Click += Save_Click;

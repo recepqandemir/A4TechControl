@@ -8,7 +8,8 @@ internal static class Program
     [STAThread]
     private static void Main()
     {
-        Application.SetHighDpiMode(HighDpiMode.PerMonitorV2);
+        // Windows tüm pencereyi birlikte ölçeklesin; font/kutu oranı bozulmasın.
+        Application.SetHighDpiMode(HighDpiMode.DpiUnaware);
         Application.EnableVisualStyles();
         Application.SetCompatibleTextRenderingDefault(false);
 

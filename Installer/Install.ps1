@@ -56,7 +56,7 @@ $uninstallKey = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\A4Tec
 New-Item -Path $uninstallKey -Force | Out-Null
 $sizeKb = [math]::Round(((Get-ChildItem -LiteralPath $InstallDir -File | Measure-Object Length -Sum).Sum) / 1KB)
 Set-ItemProperty -Path $uninstallKey -Name DisplayName -Value 'A4Tech Control'
-Set-ItemProperty -Path $uninstallKey -Name DisplayVersion -Value '1.0.6'
+Set-ItemProperty -Path $uninstallKey -Name DisplayVersion -Value '1.0.7'
 Set-ItemProperty -Path $uninstallKey -Name Publisher -Value 'A4Tech Control'
 Set-ItemProperty -Path $uninstallKey -Name DisplayIcon -Value $exe
 Set-ItemProperty -Path $uninstallKey -Name InstallLocation -Value $InstallDir

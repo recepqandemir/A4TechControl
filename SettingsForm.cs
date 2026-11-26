@@ -100,15 +100,6 @@ public sealed class SettingsForm : Form
         };
     }
 
-    protected override void OnLoad(EventArgs e)
-    {
-        base.OnLoad(e);
-        // Fontlar DPI ile büyüyor; kontrolleri de aynı oranda ölçekle ki kesilmesinler.
-        float factor = DeviceDpi / 96f;
-        if (Math.Abs(factor - 1f) > 0.01f)
-            Scale(new SizeF(factor, factor));
-    }
-
     protected override void OnPaint(PaintEventArgs e)
     {
         base.OnPaint(e);
